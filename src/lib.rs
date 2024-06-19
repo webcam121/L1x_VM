@@ -249,8 +249,11 @@ impl L1xFtErc20 {
     }
 
     pub fn ft_decrease_allowance(spender_id: Address, amount: U128) {
+        // Ensure that the amount is greater than 0
         assert_ne!(amount.0, 0, "Amount should be greater than 0");
+        // Load the current state of the contract
         let mut contract = Self::load();
+         // Get the address of the caller (the owner)
         let owner_id = caller_address();
         assert_ne!(owner_id, spender_id, "Owner and spender cannot be the same");
         contract.assert_if_no_balance(&owner_id);
@@ -275,7 +278,8 @@ impl L1xFtErc20 {
 
     fn mint(&mut self, recipient_id: &Address, amount: u128) {
         let receiver_balance = self.balance_of(&recipient_id).unwrap_or_default();
-
+        
+        // get total supply
         let total_supply = self
             .total_supply
             .checked_add(amount)
